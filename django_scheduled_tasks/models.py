@@ -18,11 +18,11 @@ class ScheduledTask(models.Model):
     def execute(self):
         """ A callable function, found using our string func value """
         modulename, funcname = self.func.rsplit('.', 1)
-        imported_module = importlib.import_module(modulename)
-        func = getattr(imported_module, funcname)
 
         ok = False
         try:
+            imported_module = importlib.import_module(modulename)
+            func = getattr(imported_module, funcname)
             func()
             ok = True
         finally:
