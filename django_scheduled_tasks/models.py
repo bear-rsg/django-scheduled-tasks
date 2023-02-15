@@ -1,5 +1,6 @@
 """Database models for scheduled tasks."""
 import importlib
+import time
 from django.utils import timezone
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -14,18 +15,21 @@ class ScheduledTask(models.Model):
     enabled = models.BooleanField(default=True)
     last_timestamp = models.DateTimeField(null=True, blank=True)
     last_success = models.BooleanField(null=True, blank=True)
+    last_runtime = models.FloatField(null=True, blank=True)
 
     def execute(self):
         """Execute this task."""
         modulename, funcname = self.func.rsplit('.', 1)
 
         ok = False
+        start = time.time()
         try:
             module = importlib.import_module(modulename)
             func = getattr(module, funcname)
             func()
             ok = True
         finally:
+            self.last_runtime = time.time() - start
             self.last_timestamp = timezone.now()
             self.last_success = ok
             self.save(reload_scheduler=False)

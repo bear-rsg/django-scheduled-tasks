@@ -7,4 +7,4 @@ from .models import ScheduledTask
 class ScheduledTaskAdmin(admin.ModelAdmin):
     """Configure some readonly-fields, that are auto-updated."""
 
-    readonly_fields = ('func', 'last_timestamp', 'last_success')
+    readonly_fields = ('func', 'last_timestamp', 'last_success', 'last_runtime')
