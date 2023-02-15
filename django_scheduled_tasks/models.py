@@ -1,3 +1,4 @@
+"""Database models for scheduled tasks."""
 import importlib
 from django.utils import timezone
 from django.db import models
@@ -5,9 +6,8 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class ScheduledTask(models.Model):
-    """
-    A record represents a single scheduled (recurring) task
-    """
+    """A record represents a single scheduled (recurring) task."""
+
     func = models.CharField(max_length=100, unique=True)  # importable function name
     interval_minutes = models.IntegerField(validators=[MinValueValidator(1),
                                                        MaxValueValidator(1440)])  # 1 min to 24 hours
@@ -16,9 +16,7 @@ class ScheduledTask(models.Model):
     last_success = models.BooleanField(null=True, blank=True)
 
     def execute(self):
-        """
-        A callable function, found using our string func value
-        """
+        """Execute this task."""
         modulename, funcname = self.func.rsplit('.', 1)
 
         ok = False
@@ -33,13 +31,12 @@ class ScheduledTask(models.Model):
             self.save(reload_scheduler=False)
 
     def save(self, *args, reload_scheduler=True, **kwargs):
-        """
-        Save the model, and reload the scheduler
-        """
+        """Save the model, and reload the scheduler."""
         super().save(*args, **kwargs)
         if reload_scheduler:
             from .scheduler import reload_scheduler
             reload_scheduler()
 
     def __str__(self):
+        """Nice human-readable description of the task."""
         return f"Run {self.func} every {self.interval_minutes} minutes ({'enabled' if self.enabled else 'disabled'})"

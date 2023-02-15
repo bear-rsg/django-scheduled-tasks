@@ -1,10 +1,17 @@
+"""
+Register tasks for the background scheduler.
+
+This module provides a register_task decorator which can be used to register
+callable objects as background tasks. It adds them to the model, if they don't
+already exist.
+"""
 from .models import ScheduledTask
 from django.db import IntegrityError
 
 
 def register_task(interval):
     """
-    A decorator for registering a scheduled task.
+    Register a scheduled task via this decorator.
 
     Re-registering an existing task does nothing.
     """

@@ -1,11 +1,15 @@
+"""Configure this django app."""
 from django.apps import AppConfig
 from django.db.utils import OperationalError
 
 
 class GeneralConfig(AppConfig):
+    """Django app config for the 'general' app."""
+
     name = 'django_scheduled_tasks'
 
     def ready(self):
+        """Start the background scheduler once the app is ready."""
         from .models import ScheduledTask
         from .scheduler import start_scheduler
         try:
