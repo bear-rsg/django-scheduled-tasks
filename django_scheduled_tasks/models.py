@@ -16,13 +16,15 @@ class ScheduledTask(models.Model):
     last_success = models.BooleanField(null=True, blank=True)
 
     def execute(self):
-        """ A callable function, found using our string func value """
+        """
+        A callable function, found using our string func value
+        """
         modulename, funcname = self.func.rsplit('.', 1)
 
         ok = False
         try:
-            imported_module = importlib.import_module(modulename)
-            func = getattr(imported_module, funcname)
+            module = importlib.import_module(modulename)
+            func = getattr(module, funcname)
             func()
             ok = True
         finally:
