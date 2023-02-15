@@ -28,15 +28,16 @@ class ScheduledTask(models.Model):
         finally:
             self.last_timestamp = timezone.now()
             self.last_success = ok
-            self.save()
+            self.save(reload_scheduler=False)
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, reload_scheduler=True, **kwargs):
         """
         Save the model, and reload the scheduler
         """
         super().save(*args, **kwargs)
-        from .scheduler import reload_scheduler
-        reload_scheduler()
+        if reload_scheduler:
+            from .scheduler import reload_scheduler
+            reload_scheduler()
 
     def __str__(self):
         return f"Run {self.func} every {self.interval_minutes} minutes ({'enabled' if self.enabled else 'disabled'})"
