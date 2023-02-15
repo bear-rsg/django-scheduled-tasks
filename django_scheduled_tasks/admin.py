@@ -3,7 +3,7 @@ from .models import ScheduledTask
 
 
 class ScheduledTaskAdmin(admin.ModelAdmin):
-    readonly_fields=('last_timestamp', 'last_success')
+    readonly_fields = ('last_timestamp', 'last_success')
 
 
 admin.site.register(ScheduledTask, ScheduledTaskAdmin)

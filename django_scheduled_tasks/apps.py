@@ -17,4 +17,3 @@ class GeneralConfig(AppConfig):
         except OperationalError:
             print("WARNING: Can't find ScheduledTask table, please run migrations")
             return
-
