@@ -3,6 +3,11 @@ from django.db import IntegrityError
 
 
 def register_task(interval):
+    """
+    A decorator for registering a scheduled task.
+
+    Re-registering an existing task does nothing.
+    """
     def wrapper(func):
         try:
             desc = f'{func.__module__}.{func.__name__}'
