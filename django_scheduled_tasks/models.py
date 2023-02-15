@@ -10,7 +10,7 @@ class ScheduledTask(models.Model):
     """
     func = models.CharField(max_length=100, unique=True)  # importable function name
     interval_minutes = models.IntegerField(validators=[MinValueValidator(1),
-                                                       MaxValueValidator(1440)]) # 1 min to 24 hours
+                                                       MaxValueValidator(1440)])  # 1 min to 24 hours
     enabled = models.BooleanField(default=True)
     last_timestamp = models.DateTimeField(null=True, blank=True)
     last_success = models.BooleanField(null=True, blank=True)
