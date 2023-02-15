@@ -4,4 +4,4 @@ from .models import ScheduledTask
 
 @admin.register(ScheduledTask)
 class ScheduledTaskAdmin(admin.ModelAdmin):
-    readonly_fields = ('last_timestamp', 'last_success')
+    readonly_fields = ('func', 'last_timestamp', 'last_success')
