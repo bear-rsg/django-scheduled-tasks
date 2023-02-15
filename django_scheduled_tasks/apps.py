@@ -7,8 +7,7 @@ class GeneralConfig(AppConfig):
 
     def ready(self):
         from .models import ScheduledTask
-        from .scheduler import start_scheduler, add_task
-
+        from .scheduler import start_scheduler
         try:
             tasks = ScheduledTask.objects.filter(enabled=True)
             if tasks:
@@ -19,5 +18,3 @@ class GeneralConfig(AppConfig):
             print("WARNING: Can't find ScheduledTask table, please run migrations")
             return
 
-        for task in tasks:
-            add_task(task.execute, task.interval_minutes)
