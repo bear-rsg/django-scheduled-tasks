@@ -16,8 +16,10 @@ _scheduler = BackgroundScheduler()
 
 def start_scheduler():
     """Start our background scheduler."""
-    if not os.environ.get('RUN_MAIN'):
-        # Not in the main thread - probably running under the development runserver
+    if not (os.environ.get('UWSGI_ORIGINAL_PROC_NAME') or os.environ.get('RUN_MAIN')):
+        # UWSGI_ORIGINAL_PROC_NAME => we're running under uwsgi
+        # RUN_MAIN => we're in the development server, and the main process
+        # Otherwise, don't start the scheduler.
         return
 
     _scheduler.start()
