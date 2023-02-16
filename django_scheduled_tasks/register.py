@@ -26,6 +26,6 @@ def register_task(interval):
             # Already registered
             pass
         else:
-            print(f"Registered scheduled task {desc}")
+            logging.info(f"Registered scheduled task {desc}")
         return func
     return wrapper
