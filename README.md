@@ -46,3 +46,9 @@ class MyAppConfig(AppConfig):
             from . import scheduled_tasks
 
 ```
+
+If you're running under uwsgi, then you'll need to add this to your uwsgi.ini:
+
+```
+enable-threads = true
+```
