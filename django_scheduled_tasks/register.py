@@ -5,8 +5,11 @@ This module provides a register_task decorator which can be used to register
 callable objects as background tasks. It adds them to the model, if they don't
 already exist.
 """
+import logging
 from .models import ScheduledTask
 from django.db import IntegrityError
+
+logger = logging.getLogger(__name__)
 
 
 def register_task(interval):

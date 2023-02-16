@@ -4,9 +4,12 @@ Background scheduler.
 This module contains functions to control the background scheduler, starting it or
 reloading it. Doing either will load the tasks from the model into the scheduler.
 """
+import logging
 import os
 from apscheduler.schedulers.background import BackgroundScheduler
 from .models import ScheduledTask
+
+logger = logging.getLogger(__name__)
 
 _scheduler = BackgroundScheduler()
 
@@ -18,14 +21,14 @@ def start_scheduler():
         return
 
     _scheduler.start()
-    print("Started background scheduler")
+    logging.info("Started background scheduler")
     _load_tasks()
 
 
 def reload_scheduler():
     """Reload our background scheduler."""
     _scheduler.remove_all_jobs()
-    print("Restarted background scheduler")
+    logging.info("Restarted background scheduler")
     _load_tasks()
 
 
@@ -39,4 +42,4 @@ def _load_tasks():
     tasks = ScheduledTask.objects.filter(enabled=True)
     for task in tasks:
         add_task(task.execute, task.interval_minutes)
-        print(f"Added task '{task}' to background scheduler")
+        logging.info(f"Added task '{task}' to background scheduler")
