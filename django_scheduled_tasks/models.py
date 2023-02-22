@@ -30,7 +30,7 @@ class ScheduledTask(models.Model):
         try:
             module = importlib.import_module(modulename)
             func = getattr(module, funcname)
-            logger.debug("Executing %s", func)
+            logger.debug("Executing %s", self.func)
             func()
             ok = True
         finally:
