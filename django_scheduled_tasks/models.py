@@ -1,9 +1,13 @@
 """Database models for scheduled tasks."""
 import importlib
+import logging
 import time
 from django.utils import timezone
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+
+
+logger = logging.getLogger(__name__)
 
 
 class ScheduledTask(models.Model):
@@ -26,6 +30,7 @@ class ScheduledTask(models.Model):
         try:
             module = importlib.import_module(modulename)
             func = getattr(module, funcname)
+            logger.debug("Executing %s", self.func)
             func()
             ok = True
         finally:
