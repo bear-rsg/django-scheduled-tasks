@@ -1,5 +1,6 @@
 """Configure this django app."""
 import logging
+import sys
 from django.apps import AppConfig
 from django.db.utils import OperationalError
 
@@ -13,6 +14,10 @@ class GeneralConfig(AppConfig):
 
     def ready(self):
         """Start the background scheduler once the app is ready."""
+        if 'migrate' in sys.argv:
+            logger.info("Skipping task loading while migration in progress")
+            return
+
         from .models import ScheduledTask
         from .scheduler import start_scheduler
         try:
