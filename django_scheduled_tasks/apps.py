@@ -14,8 +14,8 @@ class GeneralConfig(AppConfig):
 
     def ready(self):
         """Start the background scheduler once the app is ready."""
-        if 'migrate' in sys.argv:
-            logger.info("Skipping task loading while migration in progress")
+        if 'migrate' in sys.argv or 'test' in sys.argv:
+            logger.info("Skipping task loading while migration/testing in progress")
             return
 
         from .models import ScheduledTask
