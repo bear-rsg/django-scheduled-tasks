@@ -6,6 +6,7 @@ callable objects as background tasks. It adds them to the model, if they don't
 already exist.
 """
 import logging
+import sys
 from .models import ScheduledTask
 from django.db import IntegrityError
 
