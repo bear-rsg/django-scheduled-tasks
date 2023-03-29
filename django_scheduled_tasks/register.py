@@ -6,6 +6,7 @@ callable objects as background tasks. It adds them to the model, if they don't
 already exist.
 """
 import logging
+import sys
 from .models import ScheduledTask
 from django.db import IntegrityError
 
@@ -19,6 +20,10 @@ def register_task(interval):
     Re-registering an existing task does nothing.
     """
     def wrapper(func):
+        if 'migrate' in sys.argv or 'test' in sys.argv:
+            logger.info("Skipping task registering while migration/testing in progress")
+            return
+
         try:
             desc = f'{func.__module__}.{func.__name__}'
             ScheduledTask.objects.create(func=desc, interval_minutes=interval)
