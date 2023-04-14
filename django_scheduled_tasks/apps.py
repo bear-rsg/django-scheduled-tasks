@@ -7,6 +7,9 @@ from django.db.utils import OperationalError
 logger = logging.getLogger(__name__)
 
 
+skip_if_arg = set(['migrate', 'test', 'makemigrations'])
+
+
 class GeneralConfig(AppConfig):
     """Django app config for the 'general' app."""
 
@@ -14,8 +17,8 @@ class GeneralConfig(AppConfig):
 
     def ready(self):
         """Start the background scheduler once the app is ready."""
-        if 'migrate' in sys.argv or 'test' in sys.argv:
-            logger.info("Skipping task loading while migration/testing in progress")
+        if set(sys.argv) & skip_if_arg:
+            logger.info("Skipping task loading")
             return
 
         from .models import ScheduledTask
