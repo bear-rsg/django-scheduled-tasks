@@ -7,7 +7,7 @@ from django.db.utils import OperationalError
 logger = logging.getLogger(__name__)
 
 
-skip_if_arg = set(['migrate', 'test', 'makemigrations'])
+skip_if_arg = set(['migrate', 'test', 'makemigrations', 'collectstatic', 'check'])
 
 
 class GeneralConfig(AppConfig):
