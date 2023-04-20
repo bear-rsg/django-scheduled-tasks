@@ -4,7 +4,7 @@ Background scheduler.
 This module contains functions to control the background scheduler, starting it or
 reloading it. Doing either will load the tasks from the model into the scheduler.
 """
-from datetime import datetime
+from datetime import datetime, timedelta
 import logging
 import os
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -43,7 +43,11 @@ def add_task(func, minutes, next_run_time):
 def _load_tasks():
     """Load our tasks from the model and add them to the scheduler."""
     tasks = ScheduledTask.objects.filter(enabled=True)
-    now = datetime.now()
+
+    # If onstart=True then we launch the task (almost) straight away. The one minute delay here
+    # is to allow the main program to start (e.g. django) and not interfere with its thread launching.
+    soon = datetime.now() + timedelta(minutes=1)
+
     for task in tasks:
-        add_task(task.execute, task.interval_minutes, next_run_time=now if task.onstart else None)
+        add_task(task.execute, task.interval_minutes, next_run_time=soon if task.onstart else None)
         logging.info(f"Added task '{task}' to background scheduler")
