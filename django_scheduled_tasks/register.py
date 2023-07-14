@@ -25,7 +25,6 @@ def register_task(interval, onstart=False):
     @param onstart: (bool) should this be run at startup?
     """
     def wrapper(func):
-        disable = getattr(settings, 'DISABLE_SCHEDULED_TASKS', None)
         if getattr(settings, 'DISABLE_SCHEDULED_TASKS', None) is True:
             logger.info("DISABLE_SCHEDULED_TASKS=True - skipping task loading")
             return
