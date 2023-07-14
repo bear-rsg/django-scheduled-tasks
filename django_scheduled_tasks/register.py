@@ -9,6 +9,7 @@ import logging
 import sys
 from .models import ScheduledTask
 from django.db import IntegrityError
+from django.conf import settings
 from .apps import skip_if_arg
 
 logger = logging.getLogger(__name__)
@@ -24,8 +25,14 @@ def register_task(interval, onstart=False):
     @param onstart: (bool) should this be run at startup?
     """
     def wrapper(func):
-        if set(sys.argv) & skip_if_arg:
-            logger.info("Skipping task loading")
+        disable = getattr(settings, 'DISABLE_SCHEDULED_TASKS', None)
+        if getattr(settings, 'DISABLE_SCHEDULED_TASKS', None) is True:
+            logger.info("DISABLE_SCHEDULED_TASKS=True - skipping task loading")
+            return
+
+        skipped_args = set(sys.argv) & skip_if_arg
+        if skipped_args:
+            logger.info("Skipping task loading due to arg(s): %s", skipped_args)
             return
 
         try:
