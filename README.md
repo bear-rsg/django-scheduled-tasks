@@ -52,3 +52,9 @@ If you're running under uwsgi, then you'll need to add this to your uwsgi.ini:
 ```
 enable-threads = true
 ```
+
+If you are running code that includes django_scheduled_tasks, but want to disable the tasks globally, then configure
+this in settings.py:
+```
+DISABLE_SCHEDULED_TASKS = True
+```
