@@ -35,8 +35,8 @@ class ScheduledTask(models.Model):
             func()
             ok = True
         finally:
-            # close DB connection and django will reconnect it to for the save below
-            # works around the cases where the connection has died between the start and end of the schduled task
+            # Close the DB connection so that Django will reconnect it to for the save below
+            # This works around the case where the connection has died or timed out before the scheduled task completes
             connection.close_if_unusable_or_obsolete()
             self.last_runtime = time.time() - start
             self.last_timestamp = timezone.now()
