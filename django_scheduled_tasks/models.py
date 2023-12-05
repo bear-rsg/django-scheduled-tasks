@@ -3,7 +3,7 @@ import importlib
 import logging
 import time
 from django.utils import timezone
-from django.db import connections, models
+from django.db import connection, models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 
@@ -37,7 +37,7 @@ class ScheduledTask(models.Model):
         finally:
             # close DB connection and django will reconnect it to for the save below
             # works around the cases where the connection has died between the start and end of the schduled task
-            conn.close_if_unusable_or_obsolete()
+            connection.close_if_unusable_or_obsolete()
             self.last_runtime = time.time() - start
             self.last_timestamp = timezone.now()
             self.last_success = ok
