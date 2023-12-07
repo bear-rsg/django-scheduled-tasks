@@ -58,3 +58,10 @@ this in settings.py:
 ```
 DISABLE_SCHEDULED_TASKS = True
 ```
+
+If you experience a lost DB connection with a scheduled task then add
+```python
+from django.db import connection
+connection.close_if_unusable_or_obsolete()
+```
+to reset the connection.
