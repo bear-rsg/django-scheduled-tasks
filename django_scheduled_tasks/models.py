@@ -1,6 +1,7 @@
 """Database models for scheduled tasks."""
 import importlib
 import logging
+from threading import Lock
 import time
 from django.utils import timezone
 from django.db import models
@@ -18,9 +19,12 @@ class ScheduledTask(models.Model):
                                                        MaxValueValidator(1440)])  # 1 min to 24 hours
     onstart = models.BooleanField(default=False)  # run at django startup?
     enabled = models.BooleanField(default=True)
+    exclusive = models.BooleanField(default=True)  # run as the only task (I.e. thread locked)
     last_timestamp = models.DateTimeField(null=True, blank=True)
     last_success = models.BooleanField(null=True, blank=True)
     last_runtime = models.FloatField(null=True, blank=True)
+
+    _exclusive_lock = Lock()
 
     def execute(self):
         """Execute this task."""
@@ -29,6 +33,11 @@ class ScheduledTask(models.Model):
         ok = False
         start = time.time()
         try:
+            if self.exclusive:
+                logger.debug("Getting exclusive scheduled tasks lock for %s", self.func)
+                self._exclusive_lock.acquire()
+                logger.debug("Getting exclusive scheduled tasks lock for %s", self.func)
+
             module = importlib.import_module(modulename)
             func = getattr(module, funcname)
             logger.debug("Executing %s", self.func)
@@ -39,6 +48,9 @@ class ScheduledTask(models.Model):
             self.last_timestamp = timezone.now()
             self.last_success = ok
             self.save(reload_scheduler=False)
+            if self.exclusive:
+                self._exclusive_lock.release()
+                logger.debug("Released exclusive scheduled tasks lock for %s", self.func)
 
     def save(self, *args, reload_scheduler=True, **kwargs):
         """Save the model, and reload the scheduler."""
