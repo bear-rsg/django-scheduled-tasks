@@ -32,7 +32,7 @@ def register_task(interval, onstart=False):
         skipped_args = set(sys.argv) & skip_if_arg
         if skipped_args:
             logger.info("Skipping task loading due to arg(s): %s", skipped_args)
-            return
+            return func
 
         try:
             desc = f'{func.__module__}.{func.__name__}'
