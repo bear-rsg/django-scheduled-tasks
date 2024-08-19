@@ -1,14 +1,12 @@
 """Example test case."""
 from django.test import TestCase
 from django_scheduled_tasks.models import ScheduledTask
-
-IS_EXECUTED = False 
+from unittest.mock import patch
 
 
 def test_func():
-    """if the test is correctly executed, it will then pass as True."""  
-    IS_EXECUTED = True 
-    print("here")
+    """If the test is correctly executed, it will then pass as True."""  
+    pass
 
 
 class ScheduledTaskCase(TestCase):
@@ -29,11 +27,14 @@ class ScheduledTaskCase(TestCase):
             f"Run {self.t1.func} every {self.t1.interval_minutes} minutes ({'enabled' if self.t1.enabled else 'disabled'})"
         )
 
-    def test_execute(self): 
+    @patch('django_scheduled_tasks.tests.test_models.test_func')
+    def test_execute(self, mock_test_func): 
         """Runs the execute function and changes IS_EXECUTED to True when ran correctly."""  
-
-        self.assertFalse(IS_EXECUTED)
         self.t1.execute()
-        self.assertTrue(IS_EXECUTED)
+        mock_test_func.assert_called_once()
+
+
+
+        # see if the global var is called self.t1.execute and see if func has been called 
 
     
