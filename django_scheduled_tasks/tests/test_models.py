@@ -21,7 +21,7 @@ class ScheduledTaskCase(TestCase):
         )
 
     def test_str(self):
-        """Inserting the test obj into the answer string and seeing if it equals the same as the real result."""
+        """Test the str dunder method."""
         self.assertEqual(
             str(self.t1),
             f"Run {self.t1.func} every {self.t1.interval_minutes} minutes"
