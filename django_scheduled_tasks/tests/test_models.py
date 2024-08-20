@@ -1,4 +1,4 @@
-"""Example test case."""
+"""Test for django_scheduled_tasks.models."""
 from django.test import TestCase
 from django_scheduled_tasks.models import ScheduledTask
 from unittest.mock import patch
