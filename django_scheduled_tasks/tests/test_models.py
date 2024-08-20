@@ -24,7 +24,8 @@ class ScheduledTaskCase(TestCase):
         """Inserting the test obj into the answer string and seeing if it equals the same as the real result."""
         self.assertEqual(
             str(self.t1),
-            f"Run {self.t1.func} every {self.t1.interval_minutes} minutes ({'enabled' if self.t1.enabled else 'disabled'})"
+            f"Run {self.t1.func} every {self.t1.interval_minutes} minutes 
+            ({'enabled' if self.t1.enabled else 'disabled'})"
         )
 
     @patch('django_scheduled_tasks.tests.test_models.test_func')
@@ -32,4 +33,3 @@ class ScheduledTaskCase(TestCase):
         """Runs the execute function and changes IS_EXECUTED to True when ran correctly."""
         self.t1.execute()
         mock_test_func.assert_called_once()
-    
