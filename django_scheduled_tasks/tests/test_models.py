@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 
 def test_func():
-    """If the test is correctly executed, it will then pass as True."""
+    """Dummy test function."""
     pass
 
 
