@@ -25,7 +25,7 @@ class ScheduledTaskCase(TestCase):
         self.assertEqual(
             str(self.t1),
             f"Run {self.t1.func} every {self.t1.interval_minutes} minutes 
-            ({'enabled' if self.t1.enabled else 'disabled'})"
+                ({'enabled' if self.t1.enabled else 'disabled'})"
         )
 
     @patch('django_scheduled_tasks.tests.test_models.test_func')
