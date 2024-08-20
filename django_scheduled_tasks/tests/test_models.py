@@ -14,7 +14,7 @@ class ScheduledTaskCase(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        """Creates the object to be used during testing."""
+        """Create an object to be used during testing."""
         cls.t1 = ScheduledTask.objects.create(
             func='django_scheduled_tasks.tests.test_models.test_func',
             interval_minutes=10
