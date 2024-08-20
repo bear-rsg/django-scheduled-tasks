@@ -10,7 +10,7 @@ def test_func():
 
 
 class ScheduledTaskCase(TestCase):
-    """Example test case, testing the three functions (execute, str, save) in the Models module."""
+    """Tests for ScheduledTask model."""
 
     @classmethod
     def setUpTestData(cls):
