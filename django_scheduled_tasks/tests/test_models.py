@@ -30,6 +30,6 @@ class ScheduledTaskCase(TestCase):
 
     @patch('django_scheduled_tasks.tests.test_models.test_func')
     def test_execute(self, mock_test_func):
-        """Runs the execute function and changes IS_EXECUTED to True when ran correctly."""
+        """Test that the execute method runs an instance of the dummy function."""
         self.t1.execute()
         mock_test_func.assert_called_once()
