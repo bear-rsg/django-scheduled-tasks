@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 
 class RegisterTaskTest(TestCase):
-    """Example test case, testing the wrapper function."""
+    """Test case for the `register_task` wrapper."""
 
     def test_register_task(self):
         """Checks that the register is empty, and then creates an object."""
