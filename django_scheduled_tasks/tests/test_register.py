@@ -49,8 +49,7 @@ class RegisterTaskTest(TestCase):
     #     def dummy():
     #         pass
 
-        # self.assertEqual(ScheduledTask.objects.count(), 1)
+        #self.assertEqual(ScheduledTask.objects.count(), 1)
 
-
-            # st = ScheduledTask.objects.first()
-            # self.assertEqual(st.func, "django_scheduled_tasks.tests.test_register.dummy")
+        #st = ScheduledTask.objects.first()
+        #self.assertEqual(st.func, "django_scheduled_tasks.tests.test_register.dummy")
