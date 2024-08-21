@@ -37,18 +37,3 @@ class RegisterTaskTest(TestCase):
 
         self.assertFalse(ScheduledTask.objects.all().exists())
 
-    # @Mock('django_scheduled_tasks.tests.test_register.dummy', side_effect=)
-    # def test_integrity(self):
-
-    #     @register_task(1)
-    #     def dummy():
-    #         pass
-
-    #     @register_task(1)
-    #     def dummy():
-    #         pass
-
-        '''self.assertEqual(ScheduledTask.objects.count(), 1)
-
-        st = ScheduledTask.objects.first()
-        self.assertEqual(st.func, "django_scheduled_tasks.tests.test_register.dummy")'''
