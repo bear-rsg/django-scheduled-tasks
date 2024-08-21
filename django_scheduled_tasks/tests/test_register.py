@@ -9,7 +9,6 @@ class RegisterTaskTest(TestCase):
 
     def test_wrapper(self):
         """Checks that the register is empty, and then creates an object."""
-
         self.assertFalse(ScheduledTask.objects.all().exists())
 
         @register_task(1)
@@ -49,7 +48,7 @@ class RegisterTaskTest(TestCase):
     #     def dummy():
     #         pass
 
-        #self.assertEqual(ScheduledTask.objects.count(), 1)
+        '''self.assertEqual(ScheduledTask.objects.count(), 1)
 
-        #st = ScheduledTask.objects.first()
-        #self.assertEqual(st.func, "django_scheduled_tasks.tests.test_register.dummy")
+        st = ScheduledTask.objects.first()
+        self.assertEqual(st.func, "django_scheduled_tasks.tests.test_register.dummy")'''
