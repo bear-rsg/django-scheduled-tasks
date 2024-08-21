@@ -1,12 +1,7 @@
-from django_scheduled_tasks.models import ScheduledTask 
+from django_scheduled_tasks.models import ScheduledTask
 from django_scheduled_tasks.register import register_task
 from django.test import TestCase
 from unittest.mock import patch
-from unittest.mock import Mock
-from logging import getLogger
-
-# def fake_task():
-#     "DISABLE_SCHEDULED_TASKS" == True 
 
 
 class RegisterTaskTest(TestCase):
@@ -59,6 +54,3 @@ class RegisterTaskTest(TestCase):
 
             # st = ScheduledTask.objects.first()
             # self.assertEqual(st.func, "django_scheduled_tasks.tests.test_register.dummy")
-        
-
-
