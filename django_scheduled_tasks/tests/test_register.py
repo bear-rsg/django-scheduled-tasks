@@ -21,7 +21,7 @@ class RegisterTaskTest(TestCase):
 
     @patch('django_scheduled_tasks.register.settings', DISABLE_SCHEDULED_TASKS=True)
     def test_register_task_with_disable_register_task(self, mock_settings):
-        """Uses settings to disable scheduled tasks."""
+        """Tests that disabling in settings correctly stops a task form being registered."""
         @register_task(1)
         def dummy():
             pass
