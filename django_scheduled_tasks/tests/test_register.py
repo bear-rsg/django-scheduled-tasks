@@ -30,7 +30,7 @@ class RegisterTaskTest(TestCase):
 
     @patch('django_scheduled_tasks.register.sys', argv=['test'])
     def test_resgister_task_with_skipped_args(self, mock_sys_arg):
-        """Uses system to skip task."""
+        """Tests that running with `test` argument stops a task form being registered."""
         @register_task(1)
         def dummy():
             pass
