@@ -8,7 +8,7 @@ from unittest.mock import patch
 class RegisterTaskTest(TestCase):
     """Example test case, testing the wrapper function."""
 
-    def test_wrapper(self):
+    def test_register_task(self):
         """Checks that the register is empty, and then creates an object."""
         self.assertFalse(ScheduledTask.objects.all().exists())
 
