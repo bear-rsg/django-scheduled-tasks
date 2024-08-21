@@ -1,6 +1,5 @@
 """Example test case."""
 from django.test import TestCase
-from apscheduler.schedulers.background import BackgroundScheduler
 from django_scheduled_tasks.scheduler import start_scheduler, reload_scheduler
 from django_scheduled_tasks.models import ScheduledTask
 from unittest.mock import patch, MagicMock
@@ -14,7 +13,7 @@ def test_func():
 class SchedulerTester(TestCase):
     """Tests for BackgroundSchedule object."""
     @patch('django_scheduled_tasks.scheduler._scheduler', new_callable=MagicMock)
-    @patch.dict('os.environ', {'UWSGI_ORIGINAL_PROC_NAME' : '1'}, clear=True)
+    @patch.dict('os.environ', {'UWSGI_ORIGINAL_PROC_NAME': '1'}, clear=True)
     def test_start_scheduler(self, mock_scheduler):
         """Tests that the background scheduler runs."""
         start_scheduler()
