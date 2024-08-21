@@ -1,3 +1,4 @@
+"""Example test case."""
 from django_scheduled_tasks.models import ScheduledTask
 from django_scheduled_tasks.register import register_task
 from django.test import TestCase
