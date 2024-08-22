@@ -23,8 +23,8 @@ class SchedulerTester(TestCase):
     def test_reload_scheduler(self, mock_scheduler):
         """Sets up test data and reloads background scheduler."""
         ScheduledTask.objects.create(
-            func= 'django_scheduled_task.tests.test_scheduler.dummy',
-            interval_minutes= 1
+            func='django_scheduled_task.tests.test_scheduler.dummy',
+            interval_minutes=1
         )
         reload_scheduler()
 
