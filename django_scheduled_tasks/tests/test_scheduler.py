@@ -29,6 +29,6 @@ class SchedulerTester(TestCase):
         reload_scheduler()
 
         mock_scheduler.add_job.assert_called_with(
-            ScheduledTask.objects.first().execute, 'interval', 
+            ScheduledTask.objects.first().execute, 'interval',
             minutes=1, next_run_time=None
-            )
+        )
