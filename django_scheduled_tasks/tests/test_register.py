@@ -11,7 +11,7 @@ class RegisterTaskTest(TestCase):
     def test_register_task(self):
         """Checks that the register is empty, and then creates an object."""
         self.assertFalse(ScheduledTask.objects.all().exists())
-        
+
         @register_task(1)
         def dummy():
             pass
