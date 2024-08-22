@@ -37,3 +37,4 @@ class RegisterTaskTest(TestCase):
             pass
 
         self.assertFalse(ScheduledTask.objects.all().exists())
+
