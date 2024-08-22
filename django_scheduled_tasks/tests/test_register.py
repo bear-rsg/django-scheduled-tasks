@@ -36,5 +36,5 @@ class RegisterTaskTest(TestCase):
         def dummy():
             pass
 
-        self.assertFalse(ScheduledTask.objects.all().exists())
-# this is a newline.
+        self.assertFalse(ScheduledTask.objects.all().exists()) 
+        
