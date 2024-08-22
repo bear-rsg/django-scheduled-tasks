@@ -9,7 +9,6 @@ def test_func():
     """Dummy test function."""
     pass
 
-
 class SchedulerTester(TestCase):
     """Tests for BackgroundSchedule object."""
     @patch('django_scheduled_tasks.scheduler._scheduler', new_callable=MagicMock)
@@ -23,9 +22,8 @@ class SchedulerTester(TestCase):
     def test_reload_scheduler(self, mock_scheduler):
         """Sets up test data and reloads background scheduler."""
         ScheduledTask.objects.create(
-            func='django_scheduled_task.tests.test_scheduler.dummy',
-            interval_minutes=1
-        )
+            func='django_scheduled_task.tests.test_scheduler.dummy', 
+            interval_minutes=1)
         reload_scheduler()
 
         mock_scheduler.add_job.assert_called_with(
