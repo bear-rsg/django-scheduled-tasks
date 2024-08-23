@@ -37,7 +37,6 @@ class ScheduledTask(models.Model):
 
     _exclusive_lock = Lock()
 
-
     def execute(self):
         """Execute this task."""
         modulename, funcname = self.func.rsplit('.', 1)

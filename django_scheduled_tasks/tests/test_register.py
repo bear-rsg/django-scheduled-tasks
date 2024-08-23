@@ -1,6 +1,4 @@
 """Example test case."""
-from time import sleep
-from time_machine import travel
 from django_scheduled_tasks.models import ScheduledTask
 from django_scheduled_tasks.register import register_task, schedule_task
 from django.test import TestCase
@@ -45,7 +43,7 @@ class ScheduledTaskTestCase(TestCase):
     """Testing the schedule_task function."""
 
     def test_schedule_task(self):
-
+        """Test decorator registers task."""
         @schedule_task('mon')
         def dummy():
             pass
@@ -53,24 +51,9 @@ class ScheduledTaskTestCase(TestCase):
         self.assertTrue(ScheduledTask.objects.all().exists())
 
     def test_schedule_task_with_hour(self):
-
+        """Test decorator registers task with hour argument."""
         @schedule_task('mon', hour=12)
         def dummy():
             pass
 
         self.assertTrue(ScheduledTask.objects.all().exists())
-
-
-    """
-    @patch('django_scheduled_tasks.models.ScheduledTask.objects.create')
-    def test_schedule_task_with_invalid_day(self, mock_create):
-        with self.assertRaises(ValueError):
-            schedule_task(day=-1, hour=12)
-
-    def test_schedule_task_correct(self):
-        if day is not None and (day < 0 or day > 6):
-            raise ValueError("Day must be between 0 (Monday) and 6 (Sunday)")
-
-        if hour is not None and (hour < 0 or hour > 23):
-            raise ValueError("Hour must be between 0 and 23")
-    """
