@@ -15,23 +15,28 @@ class ScheduledTask(models.Model):
     """A record represents a single scheduled (recurring) task."""
 
     func = models.CharField(max_length=100, unique=True)  # importable function name
-    interval_minutes = models.IntegerField(validators=[MinValueValidator(1),
-                                                       MaxValueValidator(1440)])  # 1 min to 24 hours
+
     onstart = models.BooleanField(default=False)  # run at django startup?
     enabled = models.BooleanField(default=True)
     exclusive = models.BooleanField(default=True)  # run as the only task (I.e. thread locked)
+
     last_timestamp = models.DateTimeField(null=True, blank=True)
     last_success = models.BooleanField(null=True, blank=True)
     last_runtime = models.FloatField(null=True, blank=True)
-    day = models.IntegerField(null=True, blank=True)  # Day of the week (0 for Monday, etc.)
-    hour = models.IntegerField(null=True, blank=True)  # Hour of the day (24-hour format)
-
-    # day = models.IntegerField(validators= [MinValueValidator(0), 
-    #                                         MaxValueValidator(6)])
-    # hour = models.IntegerField(validators= [MinValueValidator(8), 
-    #                                         MaxValueValidator(23)])
+    day = models.CharField(max_length=3, null=True, blank=True)  # Day of the week ('mon', 'tue', etc.)
+    hour = models.SmallIntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(23)],
+        null=True,
+        blank=True
+    )  # Hour of the day (24-hour format)
+    interval_minutes = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(1440)],
+        null=True,
+        blank=True
+    )  # 1 min to 24 hours
 
     _exclusive_lock = Lock()
+
 
     def execute(self):
         """Execute this task."""
