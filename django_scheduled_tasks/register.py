@@ -58,10 +58,4 @@ def schedule_task(day, hour=DEFAULT_SCHEDULE_HOUR, onstart=False):
          hour (int, optional): Hour of the day, 24-hour clock, defaults to `DEFAULT_SCHEDULE_HOUR`.
          onstart (bool, optional): Should this be run at startup, defaults to `False`.
     """
-
-    """will be calling the register task function
-    adding the day and time into the ScheduledTask.objects.create(..., day, hour), 
-    do i add these new variables into models.py?
-    
-    test should be doing the wrong date/time to see if it still goes through  """
     pass
