@@ -58,7 +58,6 @@ def schedule_task(day, hour=DEFAULT_SCHEDULE_HOUR, onstart=False):
          hour (int, optional): Hour of the day, 24-hour clock, defaults to `DEFAULT_SCHEDULE_HOUR`.
          onstart (bool, optional): Should this be run at startup, defaults to `False`.
     """
-
     def wrapper(func):
         try:
             desc = f'{func.__module__}.{func.__name__}'
