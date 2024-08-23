@@ -51,44 +51,28 @@ def register_task(interval, onstart=False):
 
 
 def schedule_task(day, hour=DEFAULT_SCHEDULE_HOUR, onstart=False):
-        
-        
-        def wrapper(func, interval):
-            try:
-                desc = f'{func.__module__}.{func.__name__}'
-                ScheduledTask.objects.create(
-                    func=desc, 
-                    interval_minutes = interval, 
-                    day=day, 
-                    hour = hour, 
-                    onstart=onstart
-                    )
-            except IntegrityError:
-                # Already registered
-                pass
-            else:
-                logging.info(f"Registered scheduled task {desc} for day {day} at hour {hour}.")
+    """Add a scheduled task for a specific day of the week.
+
+    Args:
+         day (str): Day of the week shorthand 'mon', 'tue', etc.
+         hour (int, optional): Hour of the day, 24-hour clock, defaults to `DEFAULT_SCHEDULE_HOUR`.
+         onstart (bool, optional): Should this be run at startup, defaults to `False`.
+    """
+
+    def wrapper(func):
+        try:
+            desc = f'{func.__module__}.{func.__name__}'
+            ScheduledTask.objects.create(
+                func=desc,
+                day=day,
+                hour=hour,
+                onstart=onstart
+            )
+        except IntegrityError:
+            # Already registered
+            pass
+        else:
+            logging.info(f"Registered scheduled task {desc} for day {day} at hour {hour}.")
 
             return func
         return wrapper
-    
-    #do i have to register task, then do this or register, then register, start_scheduler, add_task
-
-
-    # i think below is for a test instead of the actual function 
-    # name = 'django_scheduled_tasks.tests.test_models.test_func'
-    # ScheduledTask.objects.create(func=name, interval_minutes=10, day=2, hour = 13, onstart=False)
-    
-"""Add a scheduled task for a specific day of the week.
-
-    Args:
-         day (int): Day of the week, indexing from 0 in Monday.
-         hour (int, optional): Hour of the day, 24-hour clock, defaults to `DEFAULT_SCHEDULE_HOUR`.
-         onstart (bool, optional): Should this be run at startup, defaults to `False`.
-"""
-
-"""will be calling the register task function
-    adding the day and time into the ScheduledTask.objects.create(..., day, hour), 
-    do i add these new variables into models.py?
-    
-    test should be doing the wrong date/time to see if it still goes through  """
