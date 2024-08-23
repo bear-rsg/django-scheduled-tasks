@@ -23,6 +23,13 @@ class ScheduledTask(models.Model):
     last_timestamp = models.DateTimeField(null=True, blank=True)
     last_success = models.BooleanField(null=True, blank=True)
     last_runtime = models.FloatField(null=True, blank=True)
+    day = models.IntegerField(null=True, blank=True)  # Day of the week (0 for Monday, etc.)
+    hour = models.IntegerField(null=True, blank=True)  # Hour of the day (24-hour format)
+
+    # day = models.IntegerField(validators= [MinValueValidator(0), 
+    #                                         MaxValueValidator(6)])
+    # hour = models.IntegerField(validators= [MinValueValidator(8), 
+    #                                         MaxValueValidator(23)])
 
     _exclusive_lock = Lock()
 

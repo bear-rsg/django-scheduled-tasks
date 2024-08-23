@@ -52,6 +52,7 @@ def register_task(interval, onstart=False):
 
 def schedule_task(day, hour=DEFAULT_SCHEDULE_HOUR, onstart=False):
         
+        
         def wrapper(func, interval):
             try:
                 desc = f'{func.__module__}.{func.__name__}'
@@ -66,7 +67,7 @@ def schedule_task(day, hour=DEFAULT_SCHEDULE_HOUR, onstart=False):
                 # Already registered
                 pass
             else:
-                logging.info(f"Registered scheduled task {desc} fpr day {day} at hour {hour}.")
+                logging.info(f"Registered scheduled task {desc} for day {day} at hour {hour}.")
 
             return func
         return wrapper
