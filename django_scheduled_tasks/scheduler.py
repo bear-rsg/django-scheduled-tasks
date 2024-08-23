@@ -42,7 +42,7 @@ def add_task(func, minutes, next_run_time):
 
 
 def add_day_task(func, day, hour, next_run_time):
-    _scheduler.add_job(job_function, trigger=CronTrigger(day_of_week=day, hour=hour), next_run_time=next_run_time)
+    _scheduler.add_job(func, trigger=CronTrigger(day_of_week=day, hour=hour), next_run_time=next_run_time)
 
 
 def _load_tasks():

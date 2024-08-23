@@ -74,5 +74,5 @@ def schedule_task(day, hour=DEFAULT_SCHEDULE_HOUR, onstart=False):
         else:
             logging.info(f"Registered scheduled task {desc} for day {day} at hour {hour}.")
 
-            return func
-        return wrapper
+        return func
+    return wrapper
