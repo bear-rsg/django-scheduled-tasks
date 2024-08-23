@@ -5,7 +5,6 @@ This module provides a register_task decorator which can be used to register
 callable objects as background tasks. It adds them to the model, if they don't
 already exist.
 """
-from datetime import datetime, timedelta
 import logging
 import sys
 from .models import ScheduledTask
@@ -54,15 +53,6 @@ def register_task(interval, onstart=False):
 def schedule_task(day, hour=DEFAULT_SCHEDULE_HOUR, onstart=False):
         
         def wrapper(func, interval):
-            if getattr(settings, 'DISABLE_SCHEDULED_TASKS', None) is True:
-                logger.info("DISABLE_SCHEDULED_TASKS=True - skipping task loading")
-                return
-
-            skipped_args = set(sys.argv) & skip_if_arg
-            if skipped_args:
-                logger.info("Skipping task loading due to arg(s): %s", skipped_args)
-                return func
-
             try:
                 desc = f'{func.__module__}.{func.__name__}'
                 ScheduledTask.objects.create(
