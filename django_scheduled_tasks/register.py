@@ -15,9 +15,6 @@ from .apps import skip_if_arg
 logger = logging.getLogger(__name__)
 
 
-DEFAULT_SCHEDULE_HOUR = 2
-
-
 def register_task(interval, onstart=False):
     """
     Register a scheduled task via this decorator.
@@ -48,20 +45,3 @@ def register_task(interval, onstart=False):
 
         return func
     return wrapper
-
-
-def schedule_task(day, hour=DEFAULT_SCHEDULE_HOUR, onstart=False):
-    """Add a scheduled task for a specific day of the week.
-
-    Args:
-         day (int): Day of the week, indexing from 0 in Monday.
-         hour (int, optional): Hour of the day, 24-hour clock, defaults to `DEFAULT_SCHEDULE_HOUR`.
-         onstart (bool, optional): Should this be run at startup, defaults to `False`.
-    """
-
-    """will be calling the register task function
-    adding the day and time into the ScheduledTask.objects.create(..., day, hour), 
-    do i add these new variables into models.py?
-    
-    test should be doing the wrong date/time to see if it still goes through  """
-    pass
