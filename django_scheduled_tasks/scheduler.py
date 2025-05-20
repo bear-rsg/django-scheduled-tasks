@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 import logging
 import os
 from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.cron import CronTrigger
 from .models import ScheduledTask
 
 logger = logging.getLogger(__name__)
@@ -40,6 +41,11 @@ def add_task(func, minutes, next_run_time):
     _scheduler.add_job(func, 'interval', minutes=minutes, next_run_time=next_run_time)
 
 
+def add_day_task(func, day, hour, next_run_time):
+    """Add a task to our scheduler. Call function 'func' on every 'day' at 'hour' hours."""
+    _scheduler.add_job(func, trigger=CronTrigger(day_of_week=day, hour=hour), next_run_time=next_run_time)
+
+
 def _load_tasks():
     """Load our tasks from the model and add them to the scheduler."""
     tasks = ScheduledTask.objects.filter(enabled=True)
@@ -49,5 +55,9 @@ def _load_tasks():
     soon = datetime.now() + timedelta(minutes=1)
 
     for task in tasks:
-        add_task(task.execute, task.interval_minutes, next_run_time=soon if task.onstart else None)
+        if task.interval_minutes:
+            add_task(task.execute, task.interval_minutes, next_run_time=soon if task.onstart else None)
+        else:
+            add_day_task(task.execute, task.day, task.hour, next_run_time=soon if task.onstart else None)
+
         logging.info(f"Added task '{task}' to background scheduler")

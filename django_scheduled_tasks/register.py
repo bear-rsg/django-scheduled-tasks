@@ -15,6 +15,9 @@ from .apps import skip_if_arg
 logger = logging.getLogger(__name__)
 
 
+DEFAULT_SCHEDULE_HOUR = 2
+
+
 def register_task(interval, onstart=False):
     """
     Register a scheduled task via this decorator.
@@ -42,6 +45,33 @@ def register_task(interval, onstart=False):
             pass
         else:
             logging.info(f"Registered scheduled task {desc}")
+
+        return func
+    return wrapper
+
+
+def schedule_task(day, hour=DEFAULT_SCHEDULE_HOUR, onstart=False):
+    """Add a scheduled task for a specific day of the week.
+
+    Args:
+         day (str): Day of the week shorthand 'mon', 'tue', 'wed', etc.
+         hour (int, optional): Hour of the day, 24-hour clock, defaults to `DEFAULT_SCHEDULE_HOUR`.
+         onstart (bool, optional): Should this be run at startup, defaults to `False`.
+    """
+    def wrapper(func):
+        try:
+            desc = f'{func.__module__}.{func.__name__}'
+            ScheduledTask.objects.create(
+                func=desc,
+                day=day,
+                hour=hour,
+                onstart=onstart
+            )
+        except IntegrityError:
+            # Already registered
+            pass
+        else:
+            logging.info(f"Registered scheduled task {desc} for day {day} at hour {hour}.")
 
         return func
     return wrapper
