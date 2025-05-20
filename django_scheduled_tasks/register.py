@@ -38,11 +38,15 @@ def register_task(interval, onstart=False):
         try:
             ScheduledTask.objects.create(func=desc, interval_minutes=interval, onstart=onstart)
         except IntegrityError:
-            # update task parameters if they have changed
+            # Already registered; update parameters if they have changed
             obj = ScheduledTask.objects.get(func=desc)
             if interval != obj.interval_minutes or onstart != obj.onstart:
-                obj.interval_minutes = interval
-                obj.onstart = onstart
+                if interval != obj.interval_minutes:
+                    obj.interval_minutes = interval
+
+                if onstart != obj.onstart:
+                    obj.onstart = onstart
+
                 obj.save(update_fields=['interval_minutes', 'onstart'])
         else:
             logging.info(f"Registered scheduled task {desc}")
