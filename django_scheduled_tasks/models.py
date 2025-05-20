@@ -61,4 +61,7 @@ class ScheduledTask(models.Model):
 
     def __str__(self):
         """Nice human-readable description of the task."""
-        return f"Run {self.func} every {self.interval_minutes} minutes ({'enabled' if self.enabled else 'disabled'})"
+        msg = f"Run {self.func} every {self.interval_minutes} minutes ({'enabled' if self.enabled else 'disabled'})"
+        if self.last_timestamp:
+            msg = f"{msg}; {self.last_timestamp:%Y-%m-%d at %H:%M:%S}"
+        return msg
