@@ -19,7 +19,8 @@ def register_task(interval, onstart=False):
     """
     Register a scheduled task via this decorator.
 
-    Re-registering an existing task does nothing.
+    Re-registering an existing task does nothing,
+    unless any of the parameters have changed.
 
     @param interval: (int) interval between runs, in minutes.
     @param onstart: (bool) should this be run at startup?
