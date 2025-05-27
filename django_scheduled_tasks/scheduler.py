@@ -7,7 +7,9 @@ reloading it. Doing either will load the tasks from the model into the scheduler
 from datetime import datetime, timedelta
 import logging
 import os
+from threading import Lock
 from apscheduler.schedulers.background import BackgroundScheduler
+
 from .models import ScheduledTask
 
 logger = logging.getLogger(__name__)
@@ -51,3 +53,20 @@ def _load_tasks():
     for task in tasks:
         add_task(task.execute, task.interval_minutes, next_run_time=soon if task.onstart else None)
         logging.info(f"Added task '{task}' to background scheduler")
+
+    add_task(_status_task, 1, datetime.now())
+    logging.info(f"Added status task to background scheduler")
+
+
+def _status_task():
+    """Update the status of tasks in django db from info on the jobs."""
+    for job in _scheduler.get_jobs():
+        if hasattr(job.func, '__self__'):
+            obj = job.func.__self__  # a ScheduledTask object
+            if obj.next_expected_start_time != job.next_run_time:
+                obj.next_expected_start_time = job.next_run_time
+                obj.save(reload_scheduler=False)
+                logger.debug("Updated job %s next run time to %s", job.func.__self__.func, job.next_run_time)
+
+    logger.info("Status task complete")
+

@@ -20,9 +20,7 @@ class ScheduledTask(models.Model):
     onstart = models.BooleanField(default=False)  # run at django startup?
     enabled = models.BooleanField(default=True)
     exclusive = models.BooleanField(default=True)  # run as the only task (I.e. thread locked)
-    last_timestamp = models.DateTimeField(null=True, blank=True)
-    last_success = models.BooleanField(null=True, blank=True)
-    last_runtime = models.FloatField(null=True, blank=True)
+    next_expected_start_time = models.DateTimeField(null=True)
 
     _exclusive_lock = Lock()
 
@@ -31,7 +29,10 @@ class ScheduledTask(models.Model):
         modulename, funcname = self.func.rsplit('.', 1)
 
         ok = False
-        start = time.time()
+        log = ScheduledTaskLog()
+        log.scheduled_task = self
+        log.start_time = timezone.now()
+        log.save()
         try:
             if self.exclusive:
                 logger.debug("Getting exclusive scheduled tasks lock for %s", self.func)
@@ -44,9 +45,9 @@ class ScheduledTask(models.Model):
             func()
             ok = True
         finally:
-            self.last_runtime = time.time() - start
-            self.last_timestamp = timezone.now()
-            self.last_success = ok
+            log.end_time = timezone.now()
+            log.success = ok
+            log.save()
             self.save(reload_scheduler=False)
             if self.exclusive:
                 self._exclusive_lock.release()
@@ -59,9 +60,16 @@ class ScheduledTask(models.Model):
             from .scheduler import reload_scheduler
             reload_scheduler()
 
-    def __str__(self):
-        """Nice human-readable description of the task."""
-        msg = f"Run {self.func} every {self.interval_minutes} minutes ({'enabled' if self.enabled else 'disabled'})"
-        if self.last_timestamp:
-            msg = f"{msg}; Last run on {self.last_timestamp:%Y-%m-%d at %H:%M:%S}"
-        return msg
+    @property
+    def last_end_time(self):
+        last_log = self.scheduledtasklog_set.order_by('-end_time').first()
+        if last_log and last_log.end_time:
+            return last_log.end_time
+        return None
+
+
+class ScheduledTaskLog(models.Model):
+    scheduled_task = models.ForeignKey(ScheduledTask, on_delete=models.CASCADE)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField(null=True)
+    success = models.BooleanField(null=True)
