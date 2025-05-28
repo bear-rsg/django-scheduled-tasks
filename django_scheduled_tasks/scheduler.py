@@ -16,6 +16,14 @@ logger = logging.getLogger(__name__)
 # Clean up logs older than this (in seconds)
 LOG_MAX_AGE = 3 * 24 * 3600
 
+# Minimum number of threads to run (will be more if there are more tasks defined)
+MIN_THREADS = 5
+
+# Maximum number of threads to run (will be less, if there are fewer tasks defined).
+# It's possible for some jobs to be skipped if they can't be started on time, so setting this
+# too low may result in skips.
+MAX_THREADS = 50
+
 _scheduler = BackgroundScheduler()
 
 
@@ -27,8 +35,19 @@ def start_scheduler():
         # Otherwise, don't start the scheduler.
         return
 
+    nthreads = min(
+        MAX_THREADS,
+        max(
+            MIN_THREADS,
+            ScheduledTask.objects.filter(enabled=True).count()
+        )
+    )
+    executors = {
+        'default': {'type': 'threadpool', 'max_workers': nthreads},
+    }
+    _scheduler.configure(executors=executors)
     _scheduler.start()
-    logging.info("Started background scheduler")
+    logging.info("Started background scheduler with %s threads", nthreads)
     _load_tasks()
 
 
