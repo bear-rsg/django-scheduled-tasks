@@ -14,6 +14,6 @@ class ScheduledTaskLogInline(admin.TabularInline):
 class ScheduledTaskAdmin(admin.ModelAdmin):
     """Configure some readonly-fields, that are auto-updated."""
 
-    readonly_fields = ('func', )
+    readonly_fields = ('func', 'next_expected_start_time')
     inlines = (ScheduledTaskLogInline, )
     list_display = ('func', 'interval_minutes', 'enabled', 'last_end_time', 'next_expected_start_time')
