@@ -10,9 +10,12 @@ import os
 from threading import Lock
 from apscheduler.schedulers.background import BackgroundScheduler
 
-from .models import ScheduledTask
+from .models import ScheduledTask, ScheduledTaskLog
 
 logger = logging.getLogger(__name__)
+
+# Clean up logs older than this (in seconds)
+LOG_MAX_AGE = 3 * 24 * 3600
 
 _scheduler = BackgroundScheduler()
 
@@ -54,12 +57,13 @@ def _load_tasks():
         add_task(task.execute, task.interval_minutes, next_run_time=soon if task.onstart else None)
         logging.info(f"Added task '{task}' to background scheduler")
 
-    add_task(_status_task, 1, datetime.now())
+    add_task(_admin_task, 1, datetime.now())
     logging.info(f"Added status task to background scheduler")
 
 
-def _status_task():
-    """Update the status of tasks in django db from info on the jobs."""
+def _admin_task():
+    """Manage job info and tasks in the django db using from info on the jobs."""
+    # Update expected next run time for all jobs
     for job in _scheduler.get_jobs():
         if hasattr(job.func, '__self__'):
             obj = job.func.__self__  # a ScheduledTask object
@@ -68,5 +72,13 @@ def _status_task():
                 obj.save(reload_scheduler=False)
                 logger.debug("Updated job %s next run time to %s", job.func.__self__.func, job.next_run_time)
 
-    logger.info("Status task complete")
+    # Clean up old log records so we don't grow forever
+    cutoff = datetime.now() - timedelta(seconds=LOG_MAX_AGE)
+    for task in ScheduledTask.objects.all():
+        # Find old logs based on start time, as sometimes the end time won't be set if the job failed to complete
+        old_logs = task.scheduledtasklog_set.filter(start_time__lt=cutoff)
+        logger.debug("Deleting %d logs older than %s for task %s", old_logs.count(), cutoff, task.func)
+        old_logs.delete()
+
+    logger.info("Admin task complete")
 
