@@ -74,11 +74,12 @@ def _load_tasks():
     soon = datetime.now() + timedelta(minutes=1)
 
     for task in tasks:
-        add_task(task.execute, task.interval_minutes, next_run_time=soon if task.onstart else None)
+        start = soon if task.onstart else soon + timedelta(minutes=task.interval_minutes)
+        add_task(task.execute, task.interval_minutes, next_run_time=start)
         logging.info(f"Added task '{task}' to background scheduler")
 
-    add_task(_admin_task, 1, datetime.now())
-    logging.info("Added status task to background scheduler")
+    add_task(_admin_task, 1, soon)
+    logging.info("Added admin task to background scheduler")
 
 
 def _admin_task():
