@@ -19,7 +19,8 @@ def register_task(interval, onstart=False):
     """
     Register a scheduled task via this decorator.
 
-    Re-registering an existing task does nothing.
+    Re-registering an existing task does nothing,
+    unless any of the parameters have changed.
 
     @param interval: (int) interval between runs, in minutes.
     @param onstart: (bool) should this be run at startup?
@@ -34,12 +35,16 @@ def register_task(interval, onstart=False):
             logger.info("Skipping task loading due to arg(s): %s", skipped_args)
             return func
 
+        desc = f'{func.__module__}.{func.__name__}'
         try:
-            desc = f'{func.__module__}.{func.__name__}'
             ScheduledTask.objects.create(func=desc, interval_minutes=interval, onstart=onstart)
         except IntegrityError:
-            # Already registered
-            pass
+            # Already registered; update parameters if they have changed
+            obj = ScheduledTask.objects.get(func=desc)
+            if interval != obj.interval_minutes or onstart != obj.onstart:
+                obj.interval_minutes = interval
+                obj.onstart = onstart
+                obj.save(update_fields=['interval_minutes', 'onstart'])
         else:
             logging.info(f"Registered scheduled task {desc}")
 
