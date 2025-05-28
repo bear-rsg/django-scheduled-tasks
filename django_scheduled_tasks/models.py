@@ -23,6 +23,10 @@ class ScheduledTask(models.Model):
 
     _exclusive_lock = Lock()
 
+    def __str__(self):
+        """Nice human-readable description of the task."""
+        return f"Run {self.func} every {self.interval_minutes} minutes ({'enabled' if self.enabled else 'disabled'})"
+
     def execute(self):
         """Execute this task."""
         modulename, funcname = self.func.rsplit('.', 1)
