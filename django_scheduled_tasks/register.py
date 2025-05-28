@@ -44,7 +44,6 @@ def register_task(interval, onstart=False):
             if interval != obj.interval_minutes or onstart != obj.onstart:
                 obj.interval_minutes = interval
                 obj.onstart = onstart
-
                 obj.save(update_fields=['interval_minutes', 'onstart'])
         else:
             logging.info(f"Registered scheduled task {desc}")
