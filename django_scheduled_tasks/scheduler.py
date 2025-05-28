@@ -7,10 +7,9 @@ reloading it. Doing either will load the tasks from the model into the scheduler
 from datetime import datetime, timedelta
 import logging
 import os
-from threading import Lock
 from apscheduler.schedulers.background import BackgroundScheduler
 
-from .models import ScheduledTask, ScheduledTaskLog
+from .models import ScheduledTask
 
 logger = logging.getLogger(__name__)
 
@@ -58,11 +57,15 @@ def _load_tasks():
         logging.info(f"Added task '{task}' to background scheduler")
 
     add_task(_admin_task, 1, datetime.now())
-    logging.info(f"Added status task to background scheduler")
+    logging.info("Added status task to background scheduler")
 
 
 def _admin_task():
-    """Manage job info and tasks in the django db using from info on the jobs."""
+    """Carry out admin tasks.
+
+    1) Update expected next run time for all jobs, writing it to the ScheduledTask record
+    2) Clean up old log records so we don't grow forever
+    """
     # Update expected next run time for all jobs
     for job in _scheduler.get_jobs():
         if hasattr(job.func, '__self__'):
@@ -81,4 +84,3 @@ def _admin_task():
         old_logs.delete()
 
     logger.info("Admin task complete")
-

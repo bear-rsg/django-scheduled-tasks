@@ -5,6 +5,7 @@ from .models import ScheduledTask, ScheduledTaskLog
 
 class ScheduledTaskLogInline(admin.TabularInline):
     """Inline list for scheduled task logs."""
+
     model = ScheduledTaskLog
     readonly_fields = ('start_time', 'end_time', 'success')
 

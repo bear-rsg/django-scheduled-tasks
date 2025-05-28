@@ -2,7 +2,6 @@
 import importlib
 import logging
 from threading import Lock
-import time
 from django.utils import timezone
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -62,6 +61,7 @@ class ScheduledTask(models.Model):
 
     @property
     def last_end_time(self):
+        """Return the end time from the latest ScheduledTaskLog for this ScheduledTask."""
         last_log = self.scheduledtasklog_set.order_by('-end_time').first()
         if last_log and last_log.end_time:
             return last_log.end_time
@@ -69,6 +69,10 @@ class ScheduledTask(models.Model):
 
 
 class ScheduledTaskLog(models.Model):
+    """A record of every time the job has run.
+
+    See the _admin_task() in scheduler.py which cleans up old ScheduledTaskLog records.
+    """
     scheduled_task = models.ForeignKey(ScheduledTask, on_delete=models.CASCADE)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField(null=True)
