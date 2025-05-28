@@ -35,13 +35,15 @@ def start_scheduler():
         # Otherwise, don't start the scheduler.
         return
 
-    nthreads = min(
-        MAX_THREADS,
-        max(
-            MIN_THREADS,
-            ScheduledTask.objects.filter(enabled=True).count()
-        )
+    nthreads = max(
+        MIN_THREADS,
+        ScheduledTask.objects.filter(enabled=True).count()
     )
+    if nthreads > MAX_THREADS:
+        logger.warn("There are more scheduled tasks (%s) than allowed with the MAX_WORKERS (%s). "
+                    "This may result in some scheduled tasks not running!", nthreads, MAX_THREADS)
+        nthreads = MAX_THREADS
+
     executors = {
         'default': {'type': 'threadpool', 'max_workers': nthreads},
     }
