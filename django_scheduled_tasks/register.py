@@ -42,11 +42,8 @@ def register_task(interval, onstart=False):
             # Already registered; update parameters if they have changed
             obj = ScheduledTask.objects.get(func=desc)
             if interval != obj.interval_minutes or onstart != obj.onstart:
-                if interval != obj.interval_minutes:
-                    obj.interval_minutes = interval
-
-                if onstart != obj.onstart:
-                    obj.onstart = onstart
+                obj.interval_minutes = interval
+                obj.onstart = onstart
 
                 obj.save(update_fields=['interval_minutes', 'onstart'])
         else:
