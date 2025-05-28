@@ -73,6 +73,7 @@ class ScheduledTaskLog(models.Model):
 
     See the _admin_task() in scheduler.py which cleans up old ScheduledTaskLog records.
     """
+    
     scheduled_task = models.ForeignKey(ScheduledTask, on_delete=models.CASCADE)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField(null=True)
