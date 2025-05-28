@@ -7,6 +7,7 @@ reloading it. Doing either will load the tasks from the model into the scheduler
 from datetime import datetime, timedelta
 import logging
 import os
+from apscheduler.executors.pool import ThreadPoolExecutor
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from .models import ScheduledTask
@@ -26,6 +27,14 @@ def start_scheduler():
         # RUN_MAIN => we're in the development server, and the main process
         # Otherwise, don't start the scheduler.
         return
+
+    # set max_workers based on number of enabled scheduled tasks
+    num_workers = max(5, ScheduledTask.objects.filter(enabled=True).count())
+    logger.info("Setting max_workers to %s", num_workers)
+    executors = {
+        'threadpool': ThreadPoolExecutor(max_workers=num_workers)
+    }
+    _scheduler.configure(executors=executors)
 
     _scheduler.start()
     logging.info("Started background scheduler")
