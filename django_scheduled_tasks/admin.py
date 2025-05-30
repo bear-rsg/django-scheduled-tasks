@@ -9,6 +9,9 @@ class ScheduledTaskLogInline(admin.TabularInline):
     model = ScheduledTaskLog
     readonly_fields = ('start_time', 'end_time', 'success')
 
+    def has_add_permission(self, request, obj=None):
+        return False
+
 
 @admin.register(ScheduledTask)
 class ScheduledTaskAdmin(admin.ModelAdmin):
@@ -17,3 +20,6 @@ class ScheduledTaskAdmin(admin.ModelAdmin):
     readonly_fields = ('func', 'next_expected_start_time')
     inlines = (ScheduledTaskLogInline, )
     list_display = ('func', 'interval_minutes', 'enabled', 'last_end_time', 'next_expected_start_time')
+
+    def has_add_permission(self, request, obj=None):
+        return False
