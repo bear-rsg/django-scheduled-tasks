@@ -37,7 +37,8 @@ def start_scheduler():
 
     nthreads = max(
         MIN_THREADS,
-        ScheduledTask.objects.filter(enabled=True).count()
+        # All tasks from the DB and the _admin_task
+        ScheduledTask.objects.filter(enabled=True).count() + 1
     )
     if nthreads > MAX_THREADS:
         logger.warn("There are more scheduled tasks (%s) than allowed with the MAX_WORKERS (%s). "
